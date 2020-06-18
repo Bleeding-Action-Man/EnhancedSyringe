@@ -10,7 +10,7 @@ class KFEnhancedSyringe extends Mutator;
 simulated function PostBeginPlay()
 {
     super.PostNetBeginPlay();
-    Log("KFEnhancedMusket Enabled - Weapon will be given on StartUp!");
+    Log("KFEnhancedSyringe Enabled - Weapon will be given on StartUp!");
     ReplaceDefaultSyringe();
 }
 

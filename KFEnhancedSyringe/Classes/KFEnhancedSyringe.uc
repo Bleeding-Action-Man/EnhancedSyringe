@@ -16,7 +16,6 @@ static function FillPlayInfo(PlayInfo PlayInfo)
     PlayInfo.AddSetting("KFEnhancedSyringe", "boostWhen", "Start Boost if HP less than", 0, 0, "text");
     PlayInfo.AddSetting("KFEnhancedSyringe", "boostBy", "Boost Power Multiplier", 0, 0, "text");
     PlayInfo.AddSetting("KFEnhancedSyringe", "boostFor", "Duration of Boost (seconds)", 0, 0, "text");
-
 }
 
 static function string GetDescriptionText(string SettingName)

@@ -11,8 +11,6 @@ var() config int boostWhen;
 var() config int boostBy;
 var() config int boostFor;
 
-var KFPlayerController KFPC;
-
 Function Timer()
 {
 	local float HealSum;
@@ -27,20 +25,13 @@ Function Timer()
     Weapon.ConsumeAmmo(ThisModeNum, AmmoPerFire);
 	Instigator.GiveHealth(HealSum, 100);
 
-	/////////////// VS ///////////////
+	/////////////// Vel ///////////////
 	if(Instigator.Health <= boostWhen)
 	{
 		// @todo Activate this feature
-		Log("Ground Speed before boost: " $Instigator.Groundspeed);
-		Instigator.Groundspeed *= boostBy;
-		Log("Ground Speed after boost: " $Instigator.Groundspeed);
-		Log("OldVelocity: " $Instigator.Velocity);
-		// Instigator.Velocity.X *= boostBy*(-1);
-		// Instigator.Velocity.Y *= boostBy*(-1);
-		// Instigator.Velocity.Z *= 1.3;
-		// Instigator.ModifyVelocity(4, Instigator.Velocity);
-		// Log("NewVelocity: " $Instigator.Velocity);
-		Log("Ground Speed after boost: " $Instigator.Groundspeed);
+		// Log("Ground Speed before boost: " $Instigator.Groundspeed);
+		// Instigator.Groundspeed *= boostBy;
+		// Log("Ground Speed after boost: " $Instigator.Groundspeed);
 		// end @todo
 		if( PlayerController(Instigator.Controller) != none )
     	{

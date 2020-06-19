@@ -9,8 +9,3 @@ simulated function PostBeginPlay()
 function ReplaceSyringe(){
     RequiredEquipment[3] = String(class'KFEnhancedSyringe.EnhancedSyringe');
 }
-
-
-defaultproperties{
-    RequiredEquipment(3) = "KFEnhancedSyringe.EnhancedSyringe"
-}

@@ -18,6 +18,6 @@ Function Timer()
 	/////////////// VS ///////////////
 	if( PlayerController(Instigator.Controller) != none )
     {
-        PlayerController(Instigator.controller).ClientMessage("This is a test message, @@øSPEED BOOST GOES HERE!", 'CriticalEvent');
+        PlayerController(Instigator.controller).ClientMessage("This is a test message, @@øSPEED BOOST PERCENT GOES HERE!", 'CriticalEvent');
     }
 }

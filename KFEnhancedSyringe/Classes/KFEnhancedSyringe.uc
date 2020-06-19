@@ -5,20 +5,29 @@
 
 class KFEnhancedSyringe extends Mutator;
 
-simulated function PostNetBeginPlay()
+function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 {
-    super.PostNetBeginPlay();
-    log("Enhanced Syringe has been enabled!");
-    EnforceEnhancedSyringe();
+    if ( Other.IsA('Weapon') )
+	{
+        // For Debugging Weapon Names
+        // Log("Other :" $ String(other));
+        if ( String(Other) == "KF-WestLondon.Syringe" )
+		{
+            ReplaceWith( Other, "KFEnhancedSyringe.EnhancedSyringe" );
+            // Just to confirm the replacement
+            Log("Other : " $ String(other));
+            Log("Exit CheckReplacement");
+            return false;
+        }
+    }
+    return true;
 }
 
-function EnforceEnhancedSyringe(){
-  local EnhancedHumanPawn Player;
-
-  foreach DynamicActors(Class'EnhancedHumanPawn',Player)
-  {
-    Player.ReplaceSyringe();
-  }
+function ModifyPlayer(Pawn Player)
+{
+     Super.ModifyPlayer(Player);
+     Log("KF-EnhancedSyringe Mut Enabled - Weapon will be replaced on StartUp!");
+     Player.GiveWeapon("KFEnhancedSyringe.EnhancedSyringe");
 }
 
 defaultproperties
@@ -29,7 +38,7 @@ defaultproperties
     Description="An Enhanced version of the Med Syringe; - By Vel-San"
 
     // Mandatory Vars
-	  bAddToServerPackages=true
+	bAddToServerPackages=True
     bAlwaysRelevant=True
     RemoteRole=ROLE_SimulatedProxy
 }

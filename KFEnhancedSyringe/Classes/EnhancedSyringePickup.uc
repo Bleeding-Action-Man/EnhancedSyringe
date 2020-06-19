@@ -1,6 +1,3 @@
-//-----------------------------------------------------------
-//
-//-----------------------------------------------------------
 class EnhancedSyringePickup extends SyringePickup;
 
 defaultproperties

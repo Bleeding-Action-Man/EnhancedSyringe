@@ -1,7 +1,6 @@
 //=============================================================================
 // Base Mutator by Vel-San - Contact on Steam using the following Profile Link:
 // https://steamcommunity.com/id/Vel-San/
-// TODO: Add a config support to change FoV of the Zoom
 //=============================================================================
 
 class KFEnhancedSyringe extends Mutator;

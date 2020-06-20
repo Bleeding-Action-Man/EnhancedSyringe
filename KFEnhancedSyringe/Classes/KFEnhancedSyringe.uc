@@ -7,14 +7,30 @@
 class KFEnhancedSyringe extends Mutator Config(KFEnhancedSyringe);
 
 var() config int boostWhen;
-var() config int boostBy;
+var() config int boost;
 var() config int boostFor;
+
+var int current_time_seconds;
+
+function PostBeginPlay ()
+{
+  SetTimer(boostFor, true); 
+}
+
+function Timer ()
+{
+  current_time_seconds = Level.TimeSeconds;
+  Log("Current Mut Timer Seconds: " $current_time_seconds );
+  Log("Boost Duration Ended, reverting back to 200");
+  // @todo Fix this to disable Speed Boost
+  // Instigator.GroundSpeed = 200;
+}
 
 static function FillPlayInfo(PlayInfo PlayInfo)
 {
 	Super.FillPlayInfo(PlayInfo);
     PlayInfo.AddSetting("KFEnhancedSyringe", "boostWhen", "Start Boost if HP less than", 0, 0, "text");
-    PlayInfo.AddSetting("KFEnhancedSyringe", "boostBy", "Boost Power Multiplier", 0, 0, "text");
+    PlayInfo.AddSetting("KFEnhancedSyringe", "boost", "Boost Power", 0, 0, "text");
     PlayInfo.AddSetting("KFEnhancedSyringe", "boostFor", "Duration of Boost (seconds)", 0, 0, "text");
 }
 
@@ -24,8 +40,8 @@ static function string GetDescriptionText(string SettingName)
 	{
 		case "boostWhen":
 			return "If player's HP is less than the given value, then the boost is activated, default is 50hp";
-        case "boostBy":
-			return "Amount of Boost to be given, default is 2";
+        case "boost":
+			return "Amount of Boost to be given, default game base speed is 200, default mutator speed is 300";
         case "boostFor":
 			return "Duration of the boost, in seconds, default is 2";
 		default:
@@ -69,7 +85,7 @@ defaultproperties
     // If HP less than
 	boostWhen=50
 	// Boost Power
-	boostBy=2
+	boost=300
 	// Boost Duration, seconds
 	boostFor=2
 

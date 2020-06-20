@@ -8,8 +8,11 @@
 class EnhancedSyringeAltFire extends SyringeAltFire Config(KFEnhancedSyringe);
 
 var() config int boostWhen;
-var() config int boostBy;
+var() config int boost;
 var() config int boostFor;
+
+var int current_time_seconds;
+var int end_boost_at_seconds;
 
 Function Timer()
 {
@@ -26,17 +29,23 @@ Function Timer()
 	Instigator.GiveHealth(HealSum, 100);
 
 	/////////////// Vel ///////////////
+	end_boost_at_seconds = Level.TimeSeconds + boostFor;
+	current_time_seconds = end_boost_at_seconds - boostFor;
+	Log("Current Time Seconds: " $current_time_seconds);
+	Log("Boost should end at: " $end_boost_at_seconds);
 	if(Instigator.Health <= boostWhen)
 	{
-		// @todo Activate this feature
-		// Log("Ground Speed before boost: " $Instigator.Groundspeed);
-		// Instigator.Groundspeed *= boostBy;
-		// Log("Ground Speed after boost: " $Instigator.Groundspeed);
-		// end @todo
 		if( PlayerController(Instigator.Controller) != none )
     	{
-			PlayerController(Instigator.controller).ClientMessage("You gained ~ +" $boostBy$ " ~ sprint boost for: " $boostFor$ " seconds, now RUN", 'CriticalEvent');
+			PlayerController(Instigator.controller).ClientMessage("You gained ~ +" $boost$ " ~ sprint boost for: " $boostFor$ " seconds, now RUN!", 'CriticalEvent');
 		}
+		// @todo Activate this feature
+		Log("Ground Speed before boost: " $Instigator.Groundspeed);
+		Log("Default Ground Speed before boost: " $Instigator.default.Groundspeed);
+		Instigator.default.Groundspeed = boost;
+		Log("Ground Speed after boost: " $Instigator.Groundspeed);
+		Log("Default Ground Speed after boost: " $Instigator.default.Groundspeed);
+		// end @todo
 	}
 }
 
@@ -44,7 +53,7 @@ defaultproperties{
 	// If HP less than
 	boostWhen=50
 	// Boost Power
-	boostBy=2
+	boost=300
 	// Boost Duration, seconds
 	boostFor=2
 }

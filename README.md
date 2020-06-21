@@ -10,5 +10,6 @@
   - boostWhen  :white_check_mark:
   - boostFor  :white_check_mark:
 - Added speed boost when under healed under XX Hp  :white_check_mark:
-- Add UI Indicator for player ground speed :hourglass_flowing_sand:
 - Make SelfHeal animator much faster :white_check_mark:
+- Add UI Indicator for player ground speed :hourglass_flowing_sand:
+- Add bIsBoostActive to avoid always calling function in Timer ⌛

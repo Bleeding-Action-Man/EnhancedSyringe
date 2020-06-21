@@ -3,13 +3,12 @@
 
 ## Checklist
 
-- Create mut ✅
-- Replace basic stats ✅
-- Add mutator settings ✅
-  - boost ✅
-  - boostWhen ✅
-  - boostFor ✅
-- Added speed boost when under healed under XX Hp ✅
-- Add UI Indicator for player ground speed ⏳
-- Add WeaponReplace after self heal ⏳
-- Make SelfHeal animator much faster ⏳
+- Create mut  :white_check_mark:
+- Replace basic stats  :white_check_mark:
+- Add mutator settings  :white_check_mark:
+  - boost  :white_check_mark:
+  - boostWhen  :white_check_mark:
+  - boostFor  :white_check_mark:
+- Added speed boost when under healed under XX Hp  :white_check_mark:
+- Add UI Indicator for player ground speed :hourglass_flowing_sand:
+- Make SelfHeal animator much faster :white_check_mark:

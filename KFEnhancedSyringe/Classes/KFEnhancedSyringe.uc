@@ -14,7 +14,7 @@ var int current_time_seconds;
 
 function PostBeginPlay ()
 {
-  SetTimer(boostFor, true); 
+  SetTimer(0.2, true);
 }
 
 function Timer ()

@@ -22,11 +22,12 @@ function Timer ()
   current_time_seconds = Level.TimeSeconds;
   if (current_time_seconds > class'EnhancedSyringeAltFire'.default.end_boost_at_seconds)
   {
-    Log("Current Mut Timer Seconds: " $current_time_seconds );
-    Log("Default GroundSpeed from MUT Timer Before Reset: " $class'KFHumanPawn'.default.GroundSpeed);
-    Log("Boost Duration Ended, reverting back to 200");
+    // Uncomment LOG for Debugging | This WILL Spam your Logs 
+    // Log("Current Mut Timer Seconds: " $current_time_seconds );
+    // Log("Default GroundSpeed from MUT Timer Before Reset: " $class'KFHumanPawn'.default.GroundSpeed);
+    // Log("Boost Duration Ended, reverting back to 200");
     class'KFHumanPawn'.default.GroundSpeed = 200;
-    Log("Default GroundSpeed from MUT Timer After Reset: " $class'KFHumanPawn'.default.GroundSpeed);
+    // Log("Default GroundSpeed from MUT Timer After Reset: " $class'KFHumanPawn'.default.GroundSpeed);
   }
 }
 

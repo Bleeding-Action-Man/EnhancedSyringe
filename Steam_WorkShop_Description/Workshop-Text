@@ -1,14 +1,26 @@
-This Mutator will 'Replace' your current XXX with an enhanced version, featuring:
+This Mutator will 'Replace' your current Syringe with an enhanced version focusing on self-heal only to keep it balanced, featuring:
 
-- XXX
+- Much faster reload animation
+- Gives you a Sprint/Boost if you are below XXX hp
+- Config to customize:
+     - Boost Power
+     - Boost Duration
+     - Under what HP should the boost activate
+
+[b][u]Features that might be added[/u][/b]
+
+- Add a slight blur overlay to show that you are currently being boosted
+- Change Syringe SoundEffect
+- Change Syringe Texture
 
 [b][u]Number Of Files[/u][/b]
 
-- XXX
+- 2
 
 [b][u]File Names[/u][/b]
 
-- XXX
+- \System\KFEnhancedSyringe.u
+- \System\KFEnhancedSyringe.ucl
 
 [b][u]Usage[/u][/b]
 
@@ -18,16 +30,14 @@ This Mutator will 'Replace' your current XXX with an enhanced version, featuring
 
 [b][u]Class Names[/u][/b]
 
-- Spawn Mut: XXX
-
-- ServerPerks Pickup Name: XXX
+- Spawn Mut: KFEnhancedSyringe.KFEnhancedSyringe
 
 [b][u]Known Bugs[/u][/b]
 
-XXX
+You Tell Me.
 
 [b][u]Manual Download Links (Recommended)[/u][/b]
 
-You can find it under 'Not Whitelisted' folder named XXX
+You can find it under 'Not Whitelisted' folder named 'KF-EnhancedSyringe-v1.0b'
 
 MEGA Link: https://mega DOT nz/folder/YDoEmKiC#s6FGAtgh40-TvB4bHsLaMQ

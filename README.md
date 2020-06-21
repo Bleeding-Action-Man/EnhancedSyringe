@@ -13,3 +13,6 @@
 - Make SelfHeal animator much faster :white_check_mark:
 - Add UI Indicator for player ground speed :hourglass_flowing_sand:
 - Add bIsBoostActive to avoid always calling function in Timer ⌛
+- Add a slight blur overlay to show that you are currently being boosted ❓
+- Change Syringe SoundEffect ❓
+- Change Syringe Texture ❓

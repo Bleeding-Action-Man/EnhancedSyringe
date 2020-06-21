@@ -39,13 +39,12 @@ Function Timer()
     	{
 			PlayerController(Instigator.controller).ClientMessage("You gained ~ +" $boost$ " ~ sprint boost for: " $boostFor$ " seconds, now RUN!", 'CriticalEvent');
 		}
-		// @todo Activate this feature
 		Log("Ground Speed before boost: " $Instigator.Groundspeed);
 		Log("Default Ground Speed before boost: " $Instigator.default.Groundspeed);
 		Instigator.default.Groundspeed = boost;
+		default.end_boost_at_seconds = end_boost_at_seconds;
 		Log("Ground Speed after boost: " $Instigator.Groundspeed);
 		Log("Default Ground Speed after boost: " $Instigator.default.Groundspeed);
-		// end @todo
 	}
 }
 
@@ -56,4 +55,6 @@ defaultproperties{
 	boost=300
 	// Boost Duration, seconds
 	boostFor=2
+	// end_boost_at_seconds
+	end_boost_at_seconds=0
 }

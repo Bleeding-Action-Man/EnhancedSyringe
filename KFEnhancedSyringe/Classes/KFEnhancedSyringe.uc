@@ -20,10 +20,14 @@ function PostBeginPlay ()
 function Timer ()
 {
   current_time_seconds = Level.TimeSeconds;
-  Log("Current Mut Timer Seconds: " $current_time_seconds );
-  Log("Boost Duration Ended, reverting back to 200");
-  // @todo Fix this to disable Speed Boost
-  // Instigator.GroundSpeed = 200;
+  if (current_time_seconds > class'EnhancedSyringeAltFire'.default.end_boost_at_seconds)
+  {
+    Log("Current Mut Timer Seconds: " $current_time_seconds );
+    Log("Default GroundSpeed from MUT Timer Before Reset: " $class'KFHumanPawn'.default.GroundSpeed);
+    Log("Boost Duration Ended, reverting back to 200");
+    class'KFHumanPawn'.default.GroundSpeed = 200;
+    Log("Default GroundSpeed from MUT Timer After Reset: " $class'KFHumanPawn'.default.GroundSpeed);
+  }
 }
 
 static function FillPlayInfo(PlayInfo PlayInfo)

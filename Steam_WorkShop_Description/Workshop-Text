@@ -2,10 +2,11 @@ This Mutator will 'Replace' your current Syringe with an enhanced version focusi
 
 - Much faster reload animation
 - Gives you a Sprint/Boost if you are below XXX hp
-- Config to customize:
-     - Boost Power
-     - Boost Duration
-     - Under what HP should the boost activate
+- Config::
+
+1. Boost Power
+2. Boost Duration
+3. Under what HP should the boost activate
 
 [b][u]Features that might be added[/u][/b]
 
@@ -41,3 +42,7 @@ You Tell Me.
 You can find it under 'Not Whitelisted' folder named 'KF-EnhancedSyringe-v1.0b'
 
 MEGA Link: https://mega DOT nz/folder/YDoEmKiC#s6FGAtgh40-TvB4bHsLaMQ
+
+[b][u]Credits[/u][/b
+
+- Thanks to 'Rasmus' for initial testing

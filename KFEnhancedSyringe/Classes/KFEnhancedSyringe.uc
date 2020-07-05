@@ -59,12 +59,12 @@ function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
     if ( Other.IsA('Weapon') )
 	{
         // For Debugging Weapon Names
-        // Log("Other :" $ String(other));
-        if ( String(Other) == "KF-WestLondon.Syringe" )
+        // Log("KF-Enhanced Syringe - Other: " $GetItemName(String(other)));
+        if ( GetItemName(String(other)) == "Syringe" )
 		{
             ReplaceWith( Other, "KFEnhancedSyringe.EnhancedSyringe" );
             // Just to confirm the replacement
-            Log("Other : " $ String(other));
+            Log("Other: " $String(other));
             Log("Exit CheckReplacement");
             return false;
         }

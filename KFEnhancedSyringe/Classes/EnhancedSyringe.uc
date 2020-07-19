@@ -13,5 +13,5 @@ defaultproperties
 	PickupClass=Class'KFEnhancedSyringe.EnhancedSyringePickup'
 	ItemName="Enhanced Med-Syringe"
 
-    SuccessfulHealMessage="You healed @@ø"
+    SuccessfulHealMessage="You healed ---> "
 }

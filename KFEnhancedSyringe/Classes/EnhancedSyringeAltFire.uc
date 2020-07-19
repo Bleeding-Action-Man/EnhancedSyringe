@@ -7,12 +7,9 @@
 
 class EnhancedSyringeAltFire extends SyringeAltFire;
 
-var int boostWhen;
-var int boost;
-var int boostFor;
+var int boostWhen, boost, boostFor, current_time_seconds, end_boost_at_seconds;
 
-var int current_time_seconds;
-var int end_boost_at_seconds;
+var color AquaC, WhiteC, PurpleC, RedC;
 
 Function Timer()
 {
@@ -36,24 +33,40 @@ Function Timer()
 	end_boost_at_seconds = Level.TimeSeconds + boostFor;
 	current_time_seconds = end_boost_at_seconds - boostFor;
 	
-	Log("Current Time Seconds: " $current_time_seconds);
-	Log("Boost should end at: " $end_boost_at_seconds);
+	MutLog("Current Time Seconds: " $current_time_seconds);
+	MutLog("Boost should end at: " $end_boost_at_seconds);
 	
 	if(Instigator.Health <= boostWhen)
 	{
 		if( PlayerController(Instigator.Controller) != none )
     	{
-			PlayerController(Instigator.controller).ClientMessage("רררYou gained ~ @רר" $boost$ "ררר ~ sprint boost for: ר@ר" $boostFor$ "ררר seconds, now RUN!", 'CriticalEvent');
+			PlayerController(Instigator.controller).ClientMessage("You gained ~ " $ColorInt(boost, AquaC)$ColorString(" ~ sprint boost for: ", WhiteC)$ColorInt(boostFor, PurpleC)$ColorString(" seconds, because you're below ", WhiteC)$ColorInt(boostWhen, RedC)$ColorString(" HP, now RUN!", WhiteC), 'CriticalEvent');
 		}
-		Log("Ground Speed before boost: " $Instigator.Groundspeed);
-		Log("Default Ground Speed before boost: " $Instigator.default.Groundspeed);
+		MutLog("Ground Speed before boost: " $Instigator.Groundspeed);
+		MutLog("Default Ground Speed before boost: " $Instigator.default.Groundspeed);
 
 		Instigator.default.Groundspeed = boost;
 		default.end_boost_at_seconds = end_boost_at_seconds;
 		
-		Log("Ground Speed after boost: " $Instigator.Groundspeed);
-		Log("Default Ground Speed after boost: " $Instigator.default.Groundspeed);
+		MutLog("Ground Speed after boost: " $Instigator.Groundspeed);
+		MutLog("Default Ground Speed after boost: " $Instigator.default.Groundspeed);
 	}
+}
+
+// Thanks to PoosH, taken from ScrN for easier color encoding instead of copy/paste from ServerColor.exe
+// Slightly edited to my needs
+static final function string ColorInt(int i, color c)
+{
+    return chr(27)$chr(max(c.R,1))$chr(max(c.G,1))$chr(max(c.B,1))$i;
+}
+static final function string ColorString(string s, color c)
+{
+    return chr(27)$chr(max(c.R,1))$chr(max(c.G,1))$chr(max(c.B,1))$s;
+}
+
+simulated function MutLog(string s)
+{
+    log(s, 'EnhancedSyringe');
 }
 
 defaultproperties{
@@ -64,4 +77,10 @@ defaultproperties{
 	// FireAnimeRate
     FireAnimRate = 5
 	// FireEndAnimRate=4
+	
+	// ClientMessage Colors
+	AquaC = (R=0,G=255,B=255,A=255)
+	PurpleC = (R=255,G=0,B=255,A=255)
+	RedC = (R=255,G=0,B=0,A=255)
+	WhiteC = (R=255,G=255,B=255,A=255)
 }

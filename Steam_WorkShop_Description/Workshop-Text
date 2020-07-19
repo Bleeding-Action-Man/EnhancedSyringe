@@ -1,8 +1,8 @@
 This Mutator will 'Replace' your current Syringe with an enhanced version focusing on self-heal only to keep it balanced, featuring:
 
 - Much faster reload animation
-- Gives you a Sprint/Boost if you are below XXX hp
-- Config::
+- Gives you AND your teammates a Sprint/Boost if you are below XXX hp (If you ge the boost, all your teammates will get it too because it means you need help and you all should gather around)
+- Config:
 
 1. Boost Power
 2. Boost Duration
@@ -39,7 +39,7 @@ You Tell Me.
 
 [b][u]Manual Download Links (Recommended)[/u][/b]
 
-You can find it under 'Not Whitelisted' folder named 'KF-EnhancedSyringe-v2.0'
+You can find it under 'Not Whitelisted' folder named 'KF-EnhancedSyringe-v3.0'
 
 MEGA Link: https://mega DOT nz/folder/YDoEmKiC#s6FGAtgh40-TvB4bHsLaMQ
 

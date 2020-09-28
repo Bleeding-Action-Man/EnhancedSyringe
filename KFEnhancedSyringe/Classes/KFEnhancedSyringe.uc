@@ -130,7 +130,7 @@ simulated function Tick(float DeltaTime)
         if (TmpKFP != None)
         {
 		    TmpKFP.default.GroundSpeed = 200;
-
+            TmpKFP.ModifyVelocity(0, Velocity);
 		    if(Debug){
 		    	MutLog("-----|| DEBUG - Ground Speed after boost-end: " $TmpKFP.default.GroundSpeed$ " ||-----");
 		    }
@@ -159,9 +159,6 @@ event BroadcastMSG(coerce string Msg)
   local PlayerController pc;
   local Controller c;
   local string strTemp;
-
-  // Apply Colors to MSG
-  SetColor(Msg);
 
   for(c = level.controllerList; c != none; c = c.nextController)
   {

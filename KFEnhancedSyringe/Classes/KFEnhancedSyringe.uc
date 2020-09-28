@@ -219,7 +219,7 @@ defaultproperties
 {
     // Mut Info
     GroupName="KF-EnhancedSyringe"
-    FriendlyName="Enhanced Syringe Mutator - v3.1"
+    FriendlyName="Enhanced Syringe Mutator - v4.0"
     Description="An Enhanced version of the Med Syringe, gives you a 'Customizable' sprint boost to save your sorry ass life from being Pounded by a FleshPound; - By Vel-San"
 
     // Mut Vars

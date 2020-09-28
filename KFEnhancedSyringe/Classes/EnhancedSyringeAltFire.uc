@@ -6,7 +6,6 @@
 
 class EnhancedSyringeAltFire extends SyringeAltFire;
 
-var KFEnhancedSyringe MasterHandler;
 var float LastTimeBoosted, EndBoostAt;
 
 Function Timer()
@@ -23,43 +22,45 @@ Function Timer()
     Weapon.ConsumeAmmo(ThisModeNum, AmmoPerFire);
 	Instigator.GiveHealth(HealSum, 100);
 
-	GiveBoost(Instigator.Health);
+	GiveBoost();
 }
 
-Function GiveBoost(int PlayerHealth)
+Function GiveBoost()
 {
-	if(PlayerHealth <= MasterHandler.BoostWhen)
+	if(Instigator.Health <= class'KFEnhancedSyringe'.default.Mut.BoostWhen)
 	{
 		if( PlayerController(Instigator.Controller) != none )
     	{
-			PlayerController(Instigator.controller).ClientMessage(MasterHandler.BoostMessage, 'CriticalEvent');
+			PlayerController(Instigator.controller).ClientMessage(class'KFEnhancedSyringe'.default.Mut.BoostMessage, 'CriticalEvent');
 		}
-		if(MasterHandler.Debug){
-			MutLog("-----|| DEBUG - Ground Speed before boost: " $Instigator.Groundspeed$ " ||-----");
+		if(class'KFEnhancedSyringe'.default.Mut.Debug){
+			class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Ground Speed before boost: " $Instigator.Groundspeed$ " ||-----");
 		}
 
-		Instigator.Groundspeed = MasterHandler.BoostPower;
+		Instigator.Groundspeed = class'KFEnhancedSyringe'.default.Mut.BoostPower;
 		LastTimeBoosted = Level.TimeSeconds;
-		EndBoostAt = LastTimeBoosted + MasterHandler.BoostDuration;
+		EndBoostAt = LastTimeBoosted + class'KFEnhancedSyringe'.default.Mut.BoostDuration;
+		Enable('Tick');
 	}
 }
 
 simulated function Tick(float DeltaTime){
 	if (EndBoostAt < Level.TimeSeconds){
-		if(MasterHandler.Debug){
-			MutLog("-----|| DEBUG - Boost Ended ||-----");
+		if(class'KFEnhancedSyringe'.default.Mut.Debug){
+			class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Boost Ended ||-----");
 		}
 
 		Instigator.Groundspeed = Instigator.default.Groundspeed;
 
-		if(MasterHandler.Debug){
-			MutLog("-----|| DEBUG - Ground Speed after boost: " $Instigator.Groundspeed$ " ||-----");
+		if(class'KFEnhancedSyringe'.default.Mut.Debug){
+			class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Ground Speed after boost: " $Instigator.Groundspeed$ " ||-----");
 		}
+		Disable('Tick');
 	}
 }
 
 defaultproperties
 {
-	FireRate=0.2
+	FireRate = 0.2
     FireAnimRate = 5
 }

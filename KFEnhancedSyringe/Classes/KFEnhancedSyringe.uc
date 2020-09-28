@@ -14,6 +14,17 @@ var int BoostWhen, BoostPower, BoostDuration;
 var string BoostMessage;
 var bool Debug;
 
+var KFEnhancedSyringe Mut;
+
+// Colors from Config
+struct ColorRecord
+{
+  var config string ColorName; // Color name, for comfort
+  var config string ColorTag; // Color tag
+  var config Color Color; // RGBA values
+};
+var() config array<ColorRecord> ColorList; // Color list
+
 replication
 {
 	unreliable if (Role == ROLE_Authority)
@@ -31,8 +42,12 @@ function PostBeginPlay()
     Debug = bDebug;
 
     // Color Message
-    ReplaceText(BoostMessage, "%BD", BoostDuration);
+    ReplaceText(BoostMessage, "%BD", string(BoostDuration));
     SetColor(BoostMessage);
+
+    // Pointer To self
+    Mut = self;
+    default.Mut = self;
 }
 
 static function FillPlayInfo(PlayInfo PlayInfo)
@@ -75,7 +90,6 @@ function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
         if ( GetItemName(String(other)) == "Syringe" )
 		{
             ReplaceWith( Other, "KFEnhancedSyringe.EnhancedSyringe" );
-
             if(Debug){
                 MutLog("-----|| DEBUG - Other: " $String(other)$ " ||-----");
                 MutLog("-----|| DEBUG - Exit CheckReplacement ||-----");
@@ -90,7 +104,7 @@ function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 function ModifyPlayer(Pawn Player)
 {
     Super.ModifyPlayer(Player);
-    MutLog("KF-EnhancedSyringe Mut Enabled - Syringe will be replaced on StartUp!");
+    MutLog("-----|| KF-EnhancedSyringe Mut Enabled - Syringe will be replaced on StartUp! ||-----");
     Player.GiveWeapon("KFEnhancedSyringe.EnhancedSyringe");
 }
 
@@ -151,6 +165,6 @@ defaultproperties
 	iBoostWhen=50   // If HP less than
 	iBoostPower=300
 	iBoostDuration=2
-    sBoostMessage="You've been fucking %rboosted%w for %g%BD%w seconds! Run the %bFuck%w Away!"
+    sBoostMessage="%wYou've been fucking %rboosted%w for %g%BD%w seconds! Run the %bFuck%w Away!"
     bDebug=False
 }

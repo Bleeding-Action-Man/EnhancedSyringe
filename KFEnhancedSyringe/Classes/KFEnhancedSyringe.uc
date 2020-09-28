@@ -219,8 +219,12 @@ defaultproperties
 {
     // Mut Info
     GroupName="KF-EnhancedSyringe"
-    FriendlyName="Enhanced Syringe Mutator - v4.0"
+    FriendlyName="Enhanced Syringe Mutator - v4.1"
     Description="An Enhanced version of the Med Syringe, gives you a 'Customizable' sprint boost to save your sorry ass life from being Pounded by a FleshPound; - By Vel-San"
+	bAddToServerPackages=True
+    bAlwaysRelevant=True
+    RemoteRole=ROLE_SimulatedProxy
+    bNetNotify=True
 
     // Mut Vars
 	iBoostWhen=50   // If HP less than

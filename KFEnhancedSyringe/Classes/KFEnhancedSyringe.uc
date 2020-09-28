@@ -10,6 +10,8 @@ var() config int iBoostWhen, iBoostPower, iBoostDuration;
 var() config string sBoostMessage;
 var() config bool bDebug;
 
+var PlayerController TmpPC;
+var KFHumanPawn TmpKFP;
 var int BoostWhen, BoostPower, BoostDuration;
 var float BoostEndInSeconds;
 var string BoostMessage;
@@ -36,6 +38,8 @@ replication
 function PostBeginPlay()
 {
     TimeStampLog("-----|| Server Vars Replicated & Initialized ||-----");
+     // Start with Tick Disabled
+    Disable('Tick');
 	BoostWhen = iBoostWhen;
     BoostPower = iBoostPower;
 	BoostDuration = iBoostDuration;
@@ -49,9 +53,6 @@ function PostBeginPlay()
     // Pointer To self
     Mut = self;
     default.Mut = self;
-
-    // Start with Tick Disabled
-    Disable('Tick');
 }
 
 static function FillPlayInfo(PlayInfo PlayInfo)
@@ -85,6 +86,9 @@ static function string GetDescriptionText(string SettingName)
 
 function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 {
+    if (Other.IsA('PlayerController'))
+		TmpPC = PlayerController(Other);
+
     if ( Other.IsA('Weapon') )
 	{
         if(Debug){
@@ -120,14 +124,19 @@ function float GetSeconds(float TmpBoostEndTime){
 
 simulated function Tick(float DeltaTime)
 {
-	if (BoostEndInSeconds < Level.TimeSeconds){
+	if (BoostEndInSeconds < Level.TimeSeconds)
+    {
+        TmpKFP = KFHumanPawn(TmpPC.Pawn);
+        if (TmpKFP != None)
+        {
+		    TmpKFP.default.GroundSpeed = 200;
 
-		class'KFHumanPawn'.default.GroundSpeed = 200;
+		    if(Debug){
+		    	MutLog("-----|| DEBUG - Ground Speed after boost-end: " $TmpKFP.default.GroundSpeed$ " ||-----");
+		    }
+		    Disable('Tick');
+            }
 
-		if(Debug){
-			MutLog("-----|| DEBUG - Ground Speed after boost-end: " $class'KFHumanPawn'.default.GroundSpeed$ " ||-----");
-		}
-		Disable('Tick');
 	}
 }
 
@@ -142,7 +151,39 @@ simulated function MutLog(string s)
 }
 
 /////////////////////////////////////////////////////////////////////////
-// BELOW SECTION IS CREDITED FOR NikC //
+// BELOW SECTION IS CREDITED FOR ServerAdsKF Mutator | NikC	& DeeZNutZ //
+
+// Send MSG to Players
+event BroadcastMSG(coerce string Msg)
+{
+  local PlayerController pc;
+  local Controller c;
+  local string strTemp;
+
+  // Apply Colors to MSG
+  SetColor(Msg);
+
+  for(c = level.controllerList; c != none; c = c.nextController)
+  {
+    // Allow only player controllers
+    if(!c.isA('PlayerController'))
+      continue;
+
+    pc = PlayerController(c);
+    if(pc == none)
+      continue;
+
+    // Remove colors for server log and WebAdmin
+    if(pc.PlayerReplicationInfo.PlayerID == 0)
+    {
+      strTemp = RemoveColor(Msg);
+      pc.teamMessage(none, strTemp, 'EnhancedSyringe');
+      continue;
+    }
+
+    pc.teamMessage(none, Msg, 'EnhancedSyringe');
+  }
+}
 
 // Apply Color Tags To Message
 function SetColor(out string Msg)

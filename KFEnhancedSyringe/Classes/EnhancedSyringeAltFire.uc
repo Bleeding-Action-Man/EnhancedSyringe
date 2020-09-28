@@ -6,8 +6,6 @@
 
 class EnhancedSyringeAltFire extends SyringeAltFire;
 
-var float LastTimeBoosted, EndBoostAt;
-
 Function Timer()
 {
 	local float HealSum;
@@ -27,6 +25,10 @@ Function Timer()
 
 Function GiveBoost()
 {
+	local float LastTimeBoosted, EndBoostAt;
+	local PlayerController PC;
+    local KFHumanPawn KFP;
+
 	if(Instigator.Health <= class'KFEnhancedSyringe'.default.Mut.BoostWhen)
 	{
 		if( PlayerController(Instigator.Controller) != none )
@@ -34,18 +36,25 @@ Function GiveBoost()
 			PlayerController(Instigator.controller).ClientMessage(class'KFEnhancedSyringe'.default.Mut.BoostMessage, 'CriticalEvent');
 		}
 
-    	class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| Boost Activated! ||-----");
+		PC = class'KFEnhancedSyringe'.default.Mut.TmpPC;
+		KFP = KFHumanPawn(PC.Pawn);
+
+    	class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| Boost Activated for: " $PC.PlayerReplicationInfo.PlayerName$ " ||-----");
+		class'KFEnhancedSyringe'.default.Mut.BroadcastMSG("-----|| Sprint Boost Activated for " $PC.PlayerReplicationInfo.PlayerName$ " ||-----");
 
 		if(class'KFEnhancedSyringe'.default.Mut.Debug){
-			class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Ground Speed before boost: " $Instigator.Groundspeed$ " ||-----");
+			class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Ground Speed before boost: " $KFP.default.Groundspeed$ " ||-----");
 		}
 
-		Instigator.default.Groundspeed = class'KFEnhancedSyringe'.default.Mut.BoostPower;
+		KFP.default.Groundspeed = class'KFEnhancedSyringe'.default.Mut.BoostPower;
+
 		LastTimeBoosted = Level.TimeSeconds;
 		EndBoostAt = LastTimeBoosted + float(class'KFEnhancedSyringe'.default.Mut.BoostDuration);
+
 		class'KFEnhancedSyringe'.default.Mut.GetSeconds(EndBoostAt);
+
 		if(class'KFEnhancedSyringe'.default.Mut.Debug){
-			class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Ground Speed after boost: " $Instigator.default.Groundspeed$ " ||-----");
+			class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Ground Speed after boost: " $KFP.default.Groundspeed$ " ||-----");
 			class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Boost Started at: " $LastTimeBoosted$ " ||-----");
 			class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Boost will end at: " $EndBoostAt$ " ||-----");
 		}

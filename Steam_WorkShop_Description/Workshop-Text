@@ -1,48 +1,70 @@
 This Mutator will 'Replace' your current Syringe with an enhanced version focusing on self-heal only to keep it balanced, featuring:
 
 - Much faster reload animation
-- Gives you AND your teammates a Sprint/Boost if you are below XXX hp (If you ge the boost, all your teammates will get it too because it means you need help and you all should gather around)
+- Gives you a Sprint/Boost if you are below XX HP
+- Global notification to all players stating who is currrently being boosted, makes it easier to tell who is in trouble
 - Config:
 
 1. Boost Power
 2. Boost Duration
 3. Under what HP should the boost activate
+4. Boost Message
 
-[b][u]Features that might be added[/u][/b]
+[h1][b][u]Features that might be added[/u][/b][/h1]
 
 - Add a slight blur overlay to show that you are currently being boosted
 - Change Syringe SoundEffect
 - Change Syringe Texture
+- Add UI Indicated for the boost
 
-[b][u]Number Of Files[/u][/b]
+[h1][b][u]Number Of Files[/u][/b][/h1]
 
-- 2
+- 3
 
-[b][u]File Names[/u][/b]
+[h1][b][u]File Names[/u][/b][/h1]
 
 - \System\KFEnhancedSyringe.u
 - \System\KFEnhancedSyringe.ucl
+- \System\KFEnhancedSyringe.ini
 
-[b][u]Usage[/u][/b]
+[h1][b][u]Sample Config[/u][/b][/h1]
+
+[code]
+[KFEnhancedSyringe.KFEnhancedSyringe]
+# If Player Below XX HP
+iBoostWhen=50
+# Boost Speed
+iBoostPower=350
+# Duration till the boost ends
+iBoostDuration=3
+# %BD is the number/placeholder of Boost Duration
+# Color tag words using the labels below e.g. %g for green, %r for red, then put %w to make next words without color
+sBoostMessage=%wYou have been fucking %rboosted%w for %g%BD%w seconds! Run the %bFuck%w Away!
+# You can add more colors by using the same format of the below ColorList
+ColorList=(ColorName="Red",ColorTag="%r",Color=(B=0,G=0,R=200,A=0))
+ColorList=(ColorName="Orange",ColorTag="%o",Color=(B=0,G=127,R=255,A=0))
+ColorList=(ColorName="Yellow",ColorTag="%y",Color=(B=0,G=255,R=255,A=0))
+ColorList=(ColorName="Green",ColorTag="%g",Color=(B=0,G=200,R=0,A=0))
+ColorList=(ColorName="Blue",ColorTag="%b",Color=(B=200,G=100,R=0,A=0))
+ColorList=(ColorName="Teal",ColorTag="%t",Color=(B=113,G=179,R=60,A=0))
+ColorList=(ColorName="Violet",ColorTag="%v",Color=(B=139,G=0,R=255,A=0))
+ColorList=(ColorName="White",ColorTag="%w",Color=(B=200,G=200,R=200,A=0))
+# Better to keep debugging False :)
+bDebug=False
+[/code]
+
+[h1][b][u]Usage[/u][/b][/h1]
 
 1- Subscribe or download manually (recommended)
 2- Launch the game and wait to see 'Completed'
 3- Restart the game and you can see the mutators in your list
 
-[b][u]Class Names[/u][/b]
+[h1][b][u]Class Names[/u][/b][/h1]
 
 - Spawn Mut: KFEnhancedSyringe.KFEnhancedSyringe
 
-[b][u]Known Bugs[/u][/b]
+[h1][b][u]Manual Download Links (Recommended)[/u][/b][/h1]
 
-You Tell Me.
-
-[b][u]Manual Download Links (Recommended)[/u][/b]
-
-You can find it under 'Not Whitelisted' folder named 'KF-EnhancedSyringe-v3.0'
+You can find it under 'Not Whitelisted' folder named 'KF-EnhancedSyringe-v4.0'
 
 MEGA Link: https://mega DOT nz/folder/YDoEmKiC#s6FGAtgh40-TvB4bHsLaMQ
-
-[b][u]Credits[/u][/b]
-
-- Thanks to 'Rasmus' for initial testing

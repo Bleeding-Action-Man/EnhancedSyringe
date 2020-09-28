@@ -6,63 +6,79 @@
 
 class KFEnhancedSyringe extends Mutator Config(KFEnhancedSyringe);
 
-var config int boostWhen, boost, boostFor;
+var() config int iBoostWhen, iBoostPower, iBoostDuration;
+var() config string sBoostMessage;
+var() config bool bDebug;
 
-var int current_time_seconds;
+var PlayerController TmpPC;
+var KFHumanPawn TmpKFP;
+var int BoostWhen, BoostPower, BoostDuration;
+var float BoostEndInSeconds;
+var string BoostMessage;
+var bool Debug;
+
+var KFEnhancedSyringe Mut;
+
+// Colors from Config
+struct ColorRecord
+{
+  var config string ColorName; // Color name, for comfort
+  var config string ColorTag; // Color tag
+  var config Color Color; // RGBA values
+};
+var() config array<ColorRecord> ColorList; // Color list
 
 replication
 {
 	unreliable if (Role == ROLE_Authority)
-		boostWhen, boost, boostFor;
+		iBoostWhen, iBoostPower, iBoostDuration, sBoostMessage, bDebug,
+        BoostWhen, BoostPower, BoostDuration, BoostMessage, Debug;
 }
 
-simulated function PostNetBeginPlay()
+function PostBeginPlay()
 {
-    super.PostNetBeginPlay();
-	// Future code goes here if values needed from the server
-}
+    TimeStampLog("-----|| Server Vars Replicated & Initialized ||-----");
+     // Start with Tick Disabled
+    Disable('Tick');
+	BoostWhen = iBoostWhen;
+    BoostPower = iBoostPower;
+	BoostDuration = iBoostDuration;
+    BoostMessage = sBoostMessage;
+    Debug = bDebug;
 
-simulated function PostNetReceive()
-{
-    super.PostNetReceive();
-    TimeStampLog("-----|| Server Vars Replicated ||-----");
-	default.boostWhen = boostWhen;
-    default.boost = boost;
-	default.boostFor = boostFor;
-}
+    // Color Message
+    ReplaceText(BoostMessage, "%BD", string(BoostDuration));
+    SetColor(BoostMessage);
 
-simulated function Tick( float Delta )
-{
-  current_time_seconds = Level.TimeSeconds;
-  if (current_time_seconds > class'EnhancedSyringeAltFire'.default.end_boost_at_seconds)
-  {
-    // Uncomment LOG for Debugging | This WILL Spam your Logs 
-    // MutLog("Current Mut Timer Seconds: " $current_time_seconds );
-    // MutLog("Default GroundSpeed from MUT Timer Before Reset: " $class'KFHumanPawn'.default.GroundSpeed);
-    // MutLog("Boost Duration Ended, reverting back to 200");
-    class'KFHumanPawn'.default.GroundSpeed = 200;
-    // MutLog("Default GroundSpeed from MUT Timer After Reset: " $class'KFHumanPawn'.default.GroundSpeed);
-  }
+    // Pointer To self
+    Mut = self;
+    default.Mut = self;
 }
 
 static function FillPlayInfo(PlayInfo PlayInfo)
 {
 	Super.FillPlayInfo(PlayInfo);
-    PlayInfo.AddSetting("KFEnhancedSyringe", "boostWhen", "Start Boost if HP less than", 0, 0, "text");
-    PlayInfo.AddSetting("KFEnhancedSyringe", "boost", "Boost Power", 0, 0, "text");
-    PlayInfo.AddSetting("KFEnhancedSyringe", "boostFor", "Duration of Boost (seconds)", 0, 0, "text");
+    PlayInfo.AddSetting("KFEnhancedSyringe", "iBoostWhen", "Start Boost if HP less than", 0, 1, "text");
+    PlayInfo.AddSetting("KFEnhancedSyringe", "iBoostPower", "Boost Power", 0, 2, "text");
+    PlayInfo.AddSetting("KFEnhancedSyringe", "iBoostDuration", "Duration of Boost (seconds)", 0, 3, "text");
+    PlayInfo.AddSetting("KFEnhancedSyringe", "sBoostMessage", "Boost Message", 0, 4, "text");
+    PlayInfo.AddSetting("KFEnhancedSyringe", "bDebug", "Debug", 0, 5, "check");
 }
 
 static function string GetDescriptionText(string SettingName)
 {
 	switch(SettingName)
 	{
-		case "boostWhen":
-			return "If player's HP is less than the given value, then the boost is activated, default is 50hp";
-        case "boost":
+		case "iBoostWhen":
+			return "If player's HP is less than the given value, then the Boost is activated, default is 50hp";
+        case "iBoostPower":
 			return "Amount of Boost to be given, default game base speed is 200, default mutator speed is 300";
-        case "boostFor":
-			return "Duration of the boost, in seconds, default is 2";
+        case "iBoostDuration":
+			return "Duration of the Boost, in seconds, default is 2";
+         case "sBoostMessage":
+			return "Message to show for players when they are boosted";
+        case "bDebug":
+			return "Enable debug logs";
 		default:
 			return Super.GetDescriptionText(SettingName);
 	}
@@ -70,16 +86,23 @@ static function string GetDescriptionText(string SettingName)
 
 function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 {
+    if (Other.IsA('PlayerController'))
+		TmpPC = PlayerController(Other);
+
     if ( Other.IsA('Weapon') )
 	{
-        // For Debugging Weapon Names
-        // MutLog("KF-Enhanced Syringe - Other: " $GetItemName(String(other)));
+        if(Debug){
+            MutLog("-----|| DEBUG - KF-Enhanced Syringe - Other: " $GetItemName(String(other))$ " ||-----");
+        }
+
         if ( GetItemName(String(other)) == "Syringe" )
 		{
             ReplaceWith( Other, "KFEnhancedSyringe.EnhancedSyringe" );
-            // Just to confirm the replacement
-            MutLog("Other: " $String(other));
-            MutLog("Exit CheckReplacement");
+            if(Debug){
+                MutLog("-----|| DEBUG - Other: " $String(other)$ " ||-----");
+                MutLog("-----|| DEBUG - Exit CheckReplacement ||-----");
+            }
+
             return false;
         }
     }
@@ -88,9 +111,33 @@ function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 
 function ModifyPlayer(Pawn Player)
 {
-     Super.ModifyPlayer(Player);
-     MutLog("KF-EnhancedSyringe Mut Enabled - Weapon will be replaced on StartUp!");
-     Player.GiveWeapon("KFEnhancedSyringe.EnhancedSyringe");
+    Super.ModifyPlayer(Player);
+    MutLog("-----|| KF-EnhancedSyringe Mut Enabled - Syringe will be replaced on StartUp! ||-----");
+    Player.GiveWeapon("KFEnhancedSyringe.EnhancedSyringe");
+}
+
+function float GetSeconds(float TmpBoostEndTime){
+    BoostEndInSeconds = TmpBoostEndTime;
+    Enable('Tick');
+    return BoostEndInSeconds;
+}
+
+simulated function Tick(float DeltaTime)
+{
+	if (BoostEndInSeconds < Level.TimeSeconds)
+    {
+        TmpKFP = KFHumanPawn(TmpPC.Pawn);
+        if (TmpKFP != None)
+        {
+		    TmpKFP.default.GroundSpeed = 200;
+            TmpKFP.ModifyVelocity(0, Velocity);
+		    if(Debug){
+		    	MutLog("-----|| DEBUG - Ground Speed after boost-end: " $TmpKFP.default.GroundSpeed$ " ||-----");
+		    }
+		    Disable('Tick');
+            }
+
+	}
 }
 
 simulated function TimeStampLog(coerce string s)
@@ -103,35 +150,82 @@ simulated function MutLog(string s)
     log(s, 'EnhancedSyringe');
 }
 
-// Thanks to PoosH, taken from ScrN for easier color encoding instead of copy/paste from ServerColor.exe
-// Slightly edited to my needs
-static final function string ColorInt(int i, color c)
+/////////////////////////////////////////////////////////////////////////
+// BELOW SECTION IS CREDITED FOR ServerAdsKF Mutator | NikC	& DeeZNutZ //
+
+// Send MSG to Players
+event BroadcastMSG(coerce string Msg)
 {
-    return chr(27)$chr(max(c.R,1))$chr(max(c.G,1))$chr(max(c.B,1))$i;
+  local PlayerController pc;
+  local Controller c;
+  local string strTemp;
+
+  for(c = level.controllerList; c != none; c = c.nextController)
+  {
+    // Allow only player controllers
+    if(!c.isA('PlayerController'))
+      continue;
+
+    pc = PlayerController(c);
+    if(pc == none)
+      continue;
+
+    // Remove colors for server log and WebAdmin
+    if(pc.PlayerReplicationInfo.PlayerID == 0)
+    {
+      strTemp = RemoveColor(Msg);
+      pc.teamMessage(none, strTemp, 'EnhancedSyringe');
+      continue;
+    }
+
+    pc.teamMessage(none, Msg, 'EnhancedSyringe');
+  }
 }
-static final function string ColorString(string s, color c)
+
+// Apply Color Tags To Message
+function SetColor(out string Msg)
 {
-    return chr(27)$chr(max(c.R,1))$chr(max(c.G,1))$chr(max(c.B,1))$s;
+  local int i;
+  for(i=0; i<ColorList.Length; i++)
+  {
+    if(ColorList[i].ColorTag!="" && InStr(Msg, ColorList[i].ColorTag)!=-1)
+    {
+      ReplaceText(Msg, ColorList[i].ColorTag, FormatTagToColorCode(ColorList[i].ColorTag, ColorList[i].Color));
+    }
+  }
 }
+
+// Format Color Tag to ColorCode
+function string FormatTagToColorCode(string Tag, Color Clr)
+{
+  Tag=Class'GameInfo'.Static.MakeColorCode(Clr);
+  Return Tag;
+}
+
+function string RemoveColor(string S)
+{
+  local int P;
+  P=InStr(S,Chr(27));
+  While(P>=0)
+  {
+    S=Left(S,P)$Mid(S,P+4);
+    P=InStr(S,Chr(27));
+  }
+  Return S;
+}
+//////////////////////////////////////////////////////////////////////
 
 defaultproperties
 {
     // Mut Info
     GroupName="KF-EnhancedSyringe"
-    FriendlyName="Enhanced Syringe Mutator - v3.0"
-    Description="An Enhanced version of the Med Syringe, gives you a customizable speed boost if you go below customizable hp for customizable duration; - By Vel-San"
+    FriendlyName="Enhanced Syringe Mutator - v4.0"
+    Description="An Enhanced version of the Med Syringe, gives you a 'Customizable' sprint boost to save your sorry ass life from being Pounded by a FleshPound; - By Vel-San"
 
     // Mut Vars
-    // If HP less than
-	boostWhen=50
-	// Boost Power
-	boost=300
-	// Boost Duration, seconds
-	boostFor=2
-
-    // Mandatory Vars
-	bAddToServerPackages=True
-    bAlwaysRelevant=True
-    RemoteRole=ROLE_SimulatedProxy
-    bNetNotify=True
+	iBoostWhen=50   // If HP less than
+	iBoostPower=350
+	iBoostDuration=2
+    sBoostMessage="%wYou've been fucking %rboosted%w for %g%BD%w seconds! Run the %bFuck%w Away!"
+    bDebug=False
 }

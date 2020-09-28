@@ -32,10 +32,10 @@ Function Timer()
 
 	end_boost_at_seconds = Level.TimeSeconds + boostFor;
 	current_time_seconds = end_boost_at_seconds - boostFor;
-	
+
 	MutLog("Current Time Seconds: " $current_time_seconds);
 	MutLog("Boost should end at: " $end_boost_at_seconds);
-	
+
 	if(Instigator.Health <= boostWhen)
 	{
 		if( PlayerController(Instigator.Controller) != none )
@@ -47,7 +47,7 @@ Function Timer()
 
 		Instigator.default.Groundspeed = boost;
 		default.end_boost_at_seconds = end_boost_at_seconds;
-		
+
 		MutLog("Ground Speed after boost: " $Instigator.Groundspeed);
 		MutLog("Default Ground Speed after boost: " $Instigator.default.Groundspeed);
 	}
@@ -77,7 +77,7 @@ defaultproperties{
 	// FireAnimeRate
     FireAnimRate = 5
 	// FireEndAnimRate=4
-	
+
 	// ClientMessage Colors
 	AquaC = (R=0,G=255,B=255,A=255)
 	PurpleC = (R=255,G=0,B=255,A=255)

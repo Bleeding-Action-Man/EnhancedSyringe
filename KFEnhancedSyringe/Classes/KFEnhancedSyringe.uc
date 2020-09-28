@@ -6,14 +6,19 @@
 
 class KFEnhancedSyringe extends Mutator Config(KFEnhancedSyringe);
 
-var config int boostWhen, boost, boostFor;
+var() config int iBoostWhen, iBoost, iBoostFor;
+var() config bool bDebug;
 
-var int current_time_seconds;
+var int BoostWhen, Boost, BoostFor;
+var bool Debug;
+
+var int iCurrentTime;
 
 replication
 {
 	unreliable if (Role == ROLE_Authority)
-		boostWhen, boost, boostFor;
+		iBoostWhen, iBoost, iBoostFor, bDebug,
+        BoostWhen, Boost, BoostFor, Debug;
 }
 
 simulated function PostNetBeginPlay()
@@ -22,22 +27,22 @@ simulated function PostNetBeginPlay()
 	// Future code goes here if values needed from the server
 }
 
-simulated function PostNetReceive()
+simulated function PostBeginPlay()
 {
-    super.PostNetReceive();
-    TimeStampLog("-----|| Server Vars Replicated ||-----");
-	default.boostWhen = boostWhen;
-    default.boost = boost;
-	default.boostFor = boostFor;
+    TimeStampLog("-----|| Server Vars Replicated & Initialized ||-----");
+	BoostWhen = iBoostWhen;
+    Boost = iBoost;
+	BoostFor = iBoostFor;
+    Debug = bDebug;
 }
 
 simulated function Tick( float Delta )
 {
-  current_time_seconds = Level.TimeSeconds;
-  if (current_time_seconds > class'EnhancedSyringeAltFire'.default.end_boost_at_seconds)
+  iCurrentTime = Level.TimeSeconds;
+  if (iCurrentTime > class'EnhancedSyringeAltFire'.default.end_boost_at_seconds)
   {
-    // Uncomment LOG for Debugging | This WILL Spam your Logs 
-    // MutLog("Current Mut Timer Seconds: " $current_time_seconds );
+    // Uncomment LOG for Debugging | This WILL Spam your Logs
+    // MutLog("Current Mut Timer Seconds: " $iCurrentTime );
     // MutLog("Default GroundSpeed from MUT Timer Before Reset: " $class'KFHumanPawn'.default.GroundSpeed);
     // MutLog("Boost Duration Ended, reverting back to 200");
     class'KFHumanPawn'.default.GroundSpeed = 200;
@@ -48,21 +53,24 @@ simulated function Tick( float Delta )
 static function FillPlayInfo(PlayInfo PlayInfo)
 {
 	Super.FillPlayInfo(PlayInfo);
-    PlayInfo.AddSetting("KFEnhancedSyringe", "boostWhen", "Start Boost if HP less than", 0, 0, "text");
-    PlayInfo.AddSetting("KFEnhancedSyringe", "boost", "Boost Power", 0, 0, "text");
-    PlayInfo.AddSetting("KFEnhancedSyringe", "boostFor", "Duration of Boost (seconds)", 0, 0, "text");
+    PlayInfo.AddSetting("KFEnhancedSyringe", "iBoostWhen", "Start Boost if HP less than", 0, 1, "text");
+    PlayInfo.AddSetting("KFEnhancedSyringe", "iBoost", "Boost Power", 0, 2, "text");
+    PlayInfo.AddSetting("KFEnhancedSyringe", "iBoostFor", "Duration of Boost (seconds)", 0, 3, "text");
+    PlayInfo.AddSetting("KFEnhancedSyringe", "bDebug", "Debug", 0, 4, "text");
 }
 
 static function string GetDescriptionText(string SettingName)
 {
 	switch(SettingName)
 	{
-		case "boostWhen":
-			return "If player's HP is less than the given value, then the boost is activated, default is 50hp";
-        case "boost":
+		case "iBoostWhen":
+			return "If player's HP is less than the given value, then the iBoost is activated, default is 50hp";
+        case "iBoost":
 			return "Amount of Boost to be given, default game base speed is 200, default mutator speed is 300";
-        case "boostFor":
-			return "Duration of the boost, in seconds, default is 2";
+        case "iBoostFor":
+			return "Duration of the iBoost, in seconds, default is 2";
+        case "bDebug":
+			return "Enable debug logs";
 		default:
 			return Super.GetDescriptionText(SettingName);
 	}
@@ -72,14 +80,19 @@ function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 {
     if ( Other.IsA('Weapon') )
 	{
-        // For Debugging Weapon Names
-        // MutLog("KF-Enhanced Syringe - Other: " $GetItemName(String(other)));
+        if(Debug){
+            MutLog("KF-Enhanced Syringe - Other: " $GetItemName(String(other)));
+        }
+
         if ( GetItemName(String(other)) == "Syringe" )
 		{
             ReplaceWith( Other, "KFEnhancedSyringe.EnhancedSyringe" );
-            // Just to confirm the replacement
-            MutLog("Other: " $String(other));
-            MutLog("Exit CheckReplacement");
+
+            if(Debug){
+                MutLog("Other: " $String(other));
+                MutLog("Exit CheckReplacement");
+            }
+
             return false;
         }
     }
@@ -89,7 +102,7 @@ function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 function ModifyPlayer(Pawn Player)
 {
      Super.ModifyPlayer(Player);
-     MutLog("KF-EnhancedSyringe Mut Enabled - Weapon will be replaced on StartUp!");
+     MutLog("KF-EnhancedSyringe Mut Enabled - Syringe will be replaced on StartUp!");
      Player.GiveWeapon("KFEnhancedSyringe.EnhancedSyringe");
 }
 
@@ -103,35 +116,54 @@ simulated function MutLog(string s)
     log(s, 'EnhancedSyringe');
 }
 
-// Thanks to PoosH, taken from ScrN for easier color encoding instead of copy/paste from ServerColor.exe
-// Slightly edited to my needs
-static final function string ColorInt(int i, color c)
+/////////////////////////////////////////////////////////////////////////
+// BELOW SECTION IS CREDITED FOR NikC //
+
+// Apply Color Tags To Message
+function SetColor(out string Msg)
 {
-    return chr(27)$chr(max(c.R,1))$chr(max(c.G,1))$chr(max(c.B,1))$i;
+  local int i;
+  for(i=0; i<ColorList.Length; i++)
+  {
+    if(ColorList[i].ColorTag!="" && InStr(Msg, ColorList[i].ColorTag)!=-1)
+    {
+      ReplaceText(Msg, ColorList[i].ColorTag, FormatTagToColorCode(ColorList[i].ColorTag, ColorList[i].Color));
+    }
+  }
 }
-static final function string ColorString(string s, color c)
+
+// Format Color Tag to ColorCode
+function string FormatTagToColorCode(string Tag, Color Clr)
 {
-    return chr(27)$chr(max(c.R,1))$chr(max(c.G,1))$chr(max(c.B,1))$s;
+  Tag=Class'GameInfo'.Static.MakeColorCode(Clr);
+  Return Tag;
 }
+
+function string RemoveColor(string S)
+{
+  local int P;
+  P=InStr(S,Chr(27));
+  While(P>=0)
+  {
+    S=Left(S,P)$Mid(S,P+4);
+    P=InStr(S,Chr(27));
+  }
+  Return S;
+}
+//////////////////////////////////////////////////////////////////////
 
 defaultproperties
 {
     // Mut Info
     GroupName="KF-EnhancedSyringe"
     FriendlyName="Enhanced Syringe Mutator - v3.0"
-    Description="An Enhanced version of the Med Syringe, gives you a customizable speed boost if you go below customizable hp for customizable duration; - By Vel-San"
+    Description="An Enhanced version of the Med Syringe, gives you a 'customizable' speed boost if you go below 'customizable' HP for 'customizable' duration; - By Vel-San"
 
     // Mut Vars
     // If HP less than
-	boostWhen=50
+	iBoostWhen=50
 	// Boost Power
-	boost=300
+	iBoost=300
 	// Boost Duration, seconds
-	boostFor=2
-
-    // Mandatory Vars
-	bAddToServerPackages=True
-    bAlwaysRelevant=True
-    RemoteRole=ROLE_SimulatedProxy
-    bNetNotify=True
+	iBoostFor=2
 }

@@ -33,29 +33,22 @@ Function GiveBoost()
     	{
 			PlayerController(Instigator.controller).ClientMessage(class'KFEnhancedSyringe'.default.Mut.BoostMessage, 'CriticalEvent');
 		}
+
+    	class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| Boost Activated! ||-----");
+
 		if(class'KFEnhancedSyringe'.default.Mut.Debug){
 			class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Ground Speed before boost: " $Instigator.Groundspeed$ " ||-----");
 		}
 
-		Instigator.Groundspeed = class'KFEnhancedSyringe'.default.Mut.BoostPower;
+		Instigator.default.Groundspeed = class'KFEnhancedSyringe'.default.Mut.BoostPower;
 		LastTimeBoosted = Level.TimeSeconds;
-		EndBoostAt = LastTimeBoosted + class'KFEnhancedSyringe'.default.Mut.BoostDuration;
-		Enable('Tick');
-	}
-}
-
-simulated function Tick(float DeltaTime){
-	if (EndBoostAt < Level.TimeSeconds){
+		EndBoostAt = LastTimeBoosted + float(class'KFEnhancedSyringe'.default.Mut.BoostDuration);
+		class'KFEnhancedSyringe'.default.Mut.GetSeconds(EndBoostAt);
 		if(class'KFEnhancedSyringe'.default.Mut.Debug){
-			class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Boost Ended ||-----");
+			class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Ground Speed after boost: " $Instigator.default.Groundspeed$ " ||-----");
+			class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Boost Started at: " $LastTimeBoosted$ " ||-----");
+			class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Boost will end at: " $EndBoostAt$ " ||-----");
 		}
-
-		Instigator.Groundspeed = Instigator.default.Groundspeed;
-
-		if(class'KFEnhancedSyringe'.default.Mut.Debug){
-			class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Ground Speed after boost: " $Instigator.Groundspeed$ " ||-----");
-		}
-		Disable('Tick');
 	}
 }
 

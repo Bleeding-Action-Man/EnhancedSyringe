@@ -11,6 +11,7 @@ var() config string sBoostMessage;
 var() config bool bDebug;
 
 var int BoostWhen, BoostPower, BoostDuration;
+var float BoostEndInSeconds;
 var string BoostMessage;
 var bool Debug;
 
@@ -48,6 +49,9 @@ function PostBeginPlay()
     // Pointer To self
     Mut = self;
     default.Mut = self;
+
+    // Start with Tick Disabled
+    Disable('Tick');
 }
 
 static function FillPlayInfo(PlayInfo PlayInfo)
@@ -108,6 +112,25 @@ function ModifyPlayer(Pawn Player)
     Player.GiveWeapon("KFEnhancedSyringe.EnhancedSyringe");
 }
 
+function float GetSeconds(float TmpBoostEndTime){
+    BoostEndInSeconds = TmpBoostEndTime;
+    Enable('Tick');
+    return BoostEndInSeconds;
+}
+
+simulated function Tick(float DeltaTime)
+{
+	if (BoostEndInSeconds < Level.TimeSeconds){
+
+		class'KFHumanPawn'.default.GroundSpeed = 200;
+
+		if(Debug){
+			MutLog("-----|| DEBUG - Ground Speed after boost-end: " $class'KFHumanPawn'.default.GroundSpeed$ " ||-----");
+		}
+		Disable('Tick');
+	}
+}
+
 simulated function TimeStampLog(coerce string s)
 {
     log("["$Level.TimeSeconds$"s]" @ s, 'EnhancedSyringe');
@@ -163,7 +186,7 @@ defaultproperties
 
     // Mut Vars
 	iBoostWhen=50   // If HP less than
-	iBoostPower=300
+	iBoostPower=350
 	iBoostDuration=2
     sBoostMessage="%wYou've been fucking %rboosted%w for %g%BD%w seconds! Run the %bFuck%w Away!"
     bDebug=False

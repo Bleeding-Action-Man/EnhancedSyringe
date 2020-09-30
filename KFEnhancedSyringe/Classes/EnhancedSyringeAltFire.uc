@@ -36,7 +36,7 @@ Function GiveBoost()
 			PlayerController(Instigator.controller).ClientMessage(class'KFEnhancedSyringe'.default.Mut.BoostMessage, 'CriticalEvent');
 		}
 
-		PC = class'KFEnhancedSyringe'.default.Mut.TmpPC;
+		PC = PlayerController(Instigator.Controller);
 		KFP = KFHumanPawn(PC.Pawn);
 
     	class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| Boost Activated for: " $PC.PlayerReplicationInfo.PlayerName$ " ||-----");
@@ -51,6 +51,7 @@ Function GiveBoost()
 		LastTimeBoosted = Level.TimeSeconds;
 		EndBoostAt = LastTimeBoosted + float(class'KFEnhancedSyringe'.default.Mut.BoostDuration);
 
+		class'KFEnhancedSyringe'.default.Mut.GetPlayerController(PC);
 		class'KFEnhancedSyringe'.default.Mut.GetSeconds(EndBoostAt);
 
 		if(class'KFEnhancedSyringe'.default.Mut.Debug){

@@ -86,9 +86,6 @@ static function string GetDescriptionText(string SettingName)
 
 function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 {
-    if (Other.IsA('PlayerController'))
-		TmpPC = PlayerController(Other);
-
     if ( Other.IsA('Weapon') )
 	{
         if(Debug){
@@ -122,21 +119,24 @@ function float GetSeconds(float TmpBoostEndTime){
     return BoostEndInSeconds;
 }
 
+function GetPlayerController(PlayerController PC){
+	TmpPC = PC;
+	TmpKFP = KFHumanPawn(TmpPC.Pawn);
+}
+
 simulated function Tick(float DeltaTime)
 {
 	if (BoostEndInSeconds < Level.TimeSeconds)
     {
-        TmpKFP = KFHumanPawn(TmpPC.Pawn);
         if (TmpKFP != None)
         {
 		    TmpKFP.default.GroundSpeed = 200;
-            TmpKFP.ModifyVelocity(0, Velocity);
+            TmpKFP.ModifyVelocity(DeltaTime, Velocity);
 		    if(Debug){
 		    	MutLog("-----|| DEBUG - Ground Speed after boost-end: " $TmpKFP.default.GroundSpeed$ " ||-----");
 		    }
 		    Disable('Tick');
             }
-
 	}
 }
 
@@ -219,7 +219,7 @@ defaultproperties
 {
     // Mut Info
     GroupName="KF-EnhancedSyringe"
-    FriendlyName="Enhanced Syringe Mutator - v4.1"
+    FriendlyName="Enhanced Syringe Mutator - v4.2"
     Description="An Enhanced version of the Med Syringe, gives you a 'Customizable' sprint boost to save your sorry ass life from being Pounded by a FleshPound; - By Vel-San"
 	bAddToServerPackages=True
     bAlwaysRelevant=True

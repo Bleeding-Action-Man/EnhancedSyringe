@@ -89,15 +89,15 @@ function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
   if ( Other.IsA('Weapon') )
   {
     if(Debug){
-      MutLog("-----|| DEBUG - KF-Enhanced Syringe - Other: " $GetItemName(String(other))$ " ||-----");
+      MutLog("-----|| Enhanced Syringe Name: " $GetItemName(String(other))$ " ||-----");
     }
 
     if ( GetItemName(String(other)) == "Syringe" )
     {
       ReplaceWith( Other, "KFEnhancedSyringe.EnhancedSyringe" );
       if(Debug){
-        MutLog("-----|| DEBUG - Other: " $String(other)$ " ||-----");
-        MutLog("-----|| DEBUG - Exit CheckReplacement ||-----");
+        MutLog("-----|| Other: " $String(other)$ " ||-----");
+        MutLog("-----|| Exit CheckReplacement ||-----");
       }
 
       return false;
@@ -109,7 +109,7 @@ function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 function ModifyPlayer(Pawn Player)
 {
   Super.ModifyPlayer(Player);
-  MutLog("-----|| KF-EnhancedSyringe Mut Enabled - Syringe will be replaced on StartUp! ||-----");
+  MutLog("-----|| EnhancedSyringe Mut Enabled - Syringe will be replaced on StartUp! ||-----");
   Player.GiveWeapon("KFEnhancedSyringe.EnhancedSyringe");
 }
 
@@ -133,7 +133,7 @@ simulated function Tick(float DeltaTime)
       TmpKFP.default.GroundSpeed = 200;
       TmpKFP.ModifyVelocity(DeltaTime, Velocity);
       if(Debug){
-        MutLog("-----|| DEBUG - Ground Speed after boost-end: " $TmpKFP.default.GroundSpeed$ " ||-----");
+        MutLog("-----|| Ground Speed after boost-end: " $TmpKFP.default.GroundSpeed$ " ||-----");
       }
       Disable('Tick');
       }
@@ -219,8 +219,8 @@ defaultproperties
 {
   // Mut Info
   GroupName="KF-EnhancedSyringe"
-  FriendlyName="Enhanced Syringe Mutator - v4.2"
-  Description="An Enhanced version of the Med Syringe, gives you a 'Customizable' sprint boost to save your sorry ass life from being Pounded by a FleshPound; - By Vel-San"
+  FriendlyName="Enhanced Syringe - v4.2"
+  Description="An Enhanced version of the Med Syringe, gives you a 'Customizable' sprint boost on low 'Customizable' HP; - By Vel-San"
   bAddToServerPackages=True
   bAlwaysRelevant=True
   RemoteRole=ROLE_SimulatedProxy
@@ -230,6 +230,6 @@ defaultproperties
   iBoostWhen=50   // If HP less than
   iBoostPower=350
   iBoostDuration=2
-  sBoostMessage="%wYou've been fucking %rboosted%w for %g%BD%w seconds! Run the %bFuck%w Away!"
+  sBoostMessage="%wYou've been %rboosted%w for %g%BD%w seconds! Run the %bFuck%w Away!"
   bDebug=False
 }

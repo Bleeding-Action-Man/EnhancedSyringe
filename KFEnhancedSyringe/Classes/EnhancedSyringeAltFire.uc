@@ -43,7 +43,7 @@ Function GiveBoost()
     class'KFEnhancedSyringe'.default.Mut.BroadcastMSG("-----|| Sprint Boost Activated for " $PC.PlayerReplicationInfo.PlayerName$ " ||-----");
 
     if(class'KFEnhancedSyringe'.default.Mut.Debug){
-      class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Ground Speed before boost: " $KFP.default.Groundspeed$ " ||-----");
+      class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| Ground Speed before boost: " $KFP.default.Groundspeed$ " ||-----");
     }
 
     KFP.default.Groundspeed = class'KFEnhancedSyringe'.default.Mut.BoostPower;
@@ -55,9 +55,9 @@ Function GiveBoost()
     class'KFEnhancedSyringe'.default.Mut.GetSeconds(EndBoostAt);
 
     if(class'KFEnhancedSyringe'.default.Mut.Debug){
-      class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Ground Speed after boost: " $KFP.default.Groundspeed$ " ||-----");
-      class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Boost Started at: " $LastTimeBoosted$ " ||-----");
-      class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| DEBUG - Boost will end at: " $EndBoostAt$ " ||-----");
+      class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| Ground Speed after boost: " $KFP.default.Groundspeed$ " ||-----");
+      class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| Boost Started at: " $LastTimeBoosted$ " ||-----");
+      class'KFEnhancedSyringe'.default.Mut.MutLog("-----|| Boost will end at: " $EndBoostAt$ " ||-----");
     }
   }
 }
